@@ -32,7 +32,7 @@ public class SampleController {
         return ResponseEntity.ok(dto);
     }
 
-    @Operation(summary = "db 저장" , description = "db 저장")
+    @Operation(summary = "db 저장" , description = "db 저장하는 url")
     @PostMapping("/save")
     public ResponseEntity<SaveDTO> savesample(@RequestBody SaveDTO dto){
         sampleService.savesample(dto);
