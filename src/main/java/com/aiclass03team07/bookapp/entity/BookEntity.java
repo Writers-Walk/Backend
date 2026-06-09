@@ -41,5 +41,5 @@ public class BookEntity {
 
     @OneToOne
     @JoinColumn(name = "generateImage_id")
-    private GenrateImageEntity generateImageEntity;
+    private GenerateImageEntity generateImageEntity;
 }
