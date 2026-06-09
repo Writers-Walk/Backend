@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.cglib.core.Local;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -35,20 +34,20 @@ public class BookEntity {
     @Column(name = "publisher")
     private String publisher;
 
-    @Column(name = "seriesInfo")
+    @Column(name = "seriesinfo")
     private String seriesInfo;
 
-    @Column(name = "publicationDt")
-    private LocalDate publicationDt;
+    @Column(name = "publishedDt")
+    private String publishedDt;
 
     @CreationTimestamp
     @Column(name = "createdAt")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updatedAt")
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "generate_image_id")
+    @OneToOne
+    @JoinColumn(name = "generateImage_id")
     private GenerateImageEntity generateImageEntity;
 }
