@@ -3,6 +3,8 @@ package com.aiclass03team07.bookapp.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -33,13 +35,20 @@ public class BookEntity {
     @Column(name = "publisher")
     private String publisher;
 
+    @Column(name = "seriesInfo")
+    private String seriesInfo;
+
+    @Column(name = "publicationDt")
+    private LocalDate publicationDt;
+
+    @CreationTimestamp
     @Column(name = "createdAt")
     private LocalDate createdAt;
 
     @Column(name = "updatedAt")
     private LocalDate updatedAt;
 
-    @OneToOne
-    @JoinColumn(name = "generateImage_id")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "generate_image_id")
     private GenerateImageEntity generateImageEntity;
 }
