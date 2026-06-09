@@ -19,17 +19,25 @@ spring:
       ddl-auto: update
     show-sql: true
 
-#Server
+#env
+api:
+  key: ${API_KEY}
+#server
 server:
   port: 8080
   servlet:
     session:
       timeout: 60m
+
+#log
 logging:
   level:
     org:
       springframework:
         web: DEBUG
+
+#swagger
 springdoc:
   swagger-ui:
     path: /swagger
+
