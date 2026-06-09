@@ -3,8 +3,9 @@ package com.aiclass03team07.bookapp.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -33,11 +34,15 @@ public class BookEntity {
     @Column(name = "publisher")
     private String publisher;
 
+    @Column(name = "publishedDt")
+    private String publishedDt;
+
+    @CreationTimestamp
     @Column(name = "createdAt")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updatedAt")
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @OneToOne
     @JoinColumn(name = "generateImage_id")
