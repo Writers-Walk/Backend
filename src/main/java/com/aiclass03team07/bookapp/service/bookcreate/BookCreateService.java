@@ -16,13 +16,13 @@ public class BookCreateService {
     }
 
     //dto -> entity
-    private BookEntity convertToBookEntity (BookCreateDTO dto){
-        BookEntity entity = new BookEntity();
-        entity.setAuthor(dto.getAuthor());
-        entity.setGenre(dto.getGenre());
-        entity.setTitle(dto.getTitle());
-        entity.setContent(dto.getContent());
-        entity.setPublisher(dto.getPublisher());
-        entity.setpubli
-    }
+//    private BookEntity convertToBookEntity (BookCreateDTO dto){
+//        BookEntity entity = new BookEntity();
+//        entity.setAuthor(dto.getAuthor());
+//        entity.setGenre(dto.getGenre());
+//        entity.setTitle(dto.getTitle());
+//        entity.setContent(dto.getContent());
+//        entity.setPublisher(dto.getPublisher());
+//        entity.setpubli
+//    }
 }
