@@ -4,5 +4,11 @@ import lombok.Data;
 
 @Data
 public class SaveDTO {
-    String sampletext;
+    String title;
+    String author;
+    Long likes;
+    String content;
+    String genre;
+    String publisher;
+
 }
