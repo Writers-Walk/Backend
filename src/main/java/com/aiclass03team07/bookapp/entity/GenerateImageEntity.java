@@ -13,7 +13,7 @@ public class GenerateImageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "coverImageUrl")
+    @Column(name = "coverImageUrl", length = 100000)
     private String coverImageUrl;
 
     @Column(name = "imageModel")
@@ -25,9 +25,9 @@ public class GenerateImageEntity {
     @Column(name = "quality")
     private String quality;
 
-    @Column(name = "coverPrompt")
+    @Column(name = "coverPrompt", length = 5000)
     private String coverPrompt;
 
-    @OneToOne(mappedBy = "generateImageEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy ="generateImageEntity", fetch = FetchType.LAZY)
     private BookEntity bookEntity;
 }
