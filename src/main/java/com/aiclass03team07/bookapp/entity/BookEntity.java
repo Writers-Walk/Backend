@@ -34,6 +34,9 @@ public class BookEntity {
     @Column(name = "publisher")
     private String publisher;
 
+    @Column(name = "seriesinfo")
+    private String seriesInfo;
+
     @Column(name = "publishedDt")
     private String publishedDt;
 
