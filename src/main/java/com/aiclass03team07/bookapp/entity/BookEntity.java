@@ -32,7 +32,7 @@ public class BookEntity {
     @Column(name = "likes")
     private Long likes;
 
-    @NotBlank(message = "내용은 필수입니다.")
+    //@NotBlank(message = "내용은 필수입니다.")
     @Size(max = 1000, message = "내용은 1000자 이하로 입력해주세요.")
     @Column(name = "isbn")
     private String isbn;

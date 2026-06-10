@@ -1,13 +1,11 @@
 package com.aiclass03team07.bookapp.dto.bookcreate;
 
-import lombok.Builder;
-import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Data
-@Builder
 public class BookCreateDTO {
     //notblank -> 빈칸X
     @NotBlank(message = "제목은 필수입니다.")

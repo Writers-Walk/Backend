@@ -1,6 +1,5 @@
 package com.aiclass03team07.bookapp.service.bookdetail;
 
-import com.aiclass03team07.bookapp.dto.bookcreate.BookCreateDTO;
 import com.aiclass03team07.bookapp.dto.bookdetail.DetailDTO;
 import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.entity.GenerateImageEntity;
@@ -61,18 +60,6 @@ public class BookDetailService {
         bookRepository.deleteById(id);
     }
 
-//    // Entity → DTO
-//    private BookCreateDTO toDTO(BookEntity book) {
-//        return BookCreateDTO.builder()
-//                .title(book.getTitle())
-//                .author(book.getAuthor())
-//                .publisher(book.getPublisher())
-//                .publishedDt(book.getPublishedDt())
-//                .seriesInfo(book.getSeriesInfo())
-//                //.isbn(book.getIsbn())
-//                .genre(book.getGenre())
-//                .content(book.getContent())
-//                .build();
 
 
     private DetailDTO toDTO(BookEntity entity) {
