@@ -61,7 +61,19 @@ public class BookDetailService {
         bookRepository.deleteById(id);
     }
 
-    // Entity → DTO
+//    // Entity → DTO
+//    private BookCreateDTO toDTO(BookEntity book) {
+//        return BookCreateDTO.builder()
+//                .title(book.getTitle())
+//                .author(book.getAuthor())
+//                .publisher(book.getPublisher())
+//                .publishedDt(book.getPublishedDt())
+//                .seriesInfo(book.getSeriesInfo())
+//                //.isbn(book.getIsbn())
+//                .genre(book.getGenre())
+//                .content(book.getContent())
+//                .build();
+
 
     private DetailDTO toDTO(BookEntity entity) {
         DetailDTO dto = new DetailDTO();

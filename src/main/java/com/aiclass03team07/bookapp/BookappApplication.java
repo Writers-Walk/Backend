@@ -53,6 +53,8 @@ public class BookappApplication {
 			testBook1.setAuthor("작자미상");
 			testBook1.setContent("신비로운 마법 도서관과 관련된 판타지 소설입니다.");
 			testBook1.setGenre("판타지");
+			testBook1.setPublisher("test1");
+			testBook1.setIsbn("test1");
 			bookRepository.save(testBook1);
 
 			BookEntity testBook2 = new BookEntity();
@@ -60,6 +62,8 @@ public class BookappApplication {
 			testBook2.setAuthor("김에이블");
 			testBook2.setContent("네온 사인이 가득한 미래 도시를 배경으로 한 사이버펑크 액션입니다.");
 			testBook2.setGenre("SF");
+			testBook2.setIsbn("test2");
+			testBook2.setPublisher("test2");
 			bookRepository.save(testBook2);
 
 			System.out.println("🚀 [GenerateImage 테스트 전용] 가짜 책 데이터 2개가 DB에 주입되었습니다!");
