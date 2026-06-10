@@ -3,6 +3,7 @@ package com.aiclass03team07.bookapp.controller.bookcreate;
 import com.aiclass03team07.bookapp.dto.bookcreate.BookCreateDTO;
 import com.aiclass03team07.bookapp.service.bookcreate.BookCreateService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,10 @@ public class BookCreateController {
 
     @Operation(summary = "book 생성 api", description = "book 생성 데이터 받고 저장")
     @PostMapping("/create")
-    public ResponseEntity<BookCreateDTO> createbook (@RequestBody BookCreateDTO dto){
+    public ResponseEntity<BookCreateDTO> createbook (@Valid @RequestBody BookCreateDTO dto){
         bookCreateService.saveBookInfo(dto);
         return ResponseEntity.ok(dto);
     }
 
 }
+
