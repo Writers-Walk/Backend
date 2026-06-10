@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class DetailDTO {
+    private Long id;
     private String title;
     private String author;
     private Long likes;
