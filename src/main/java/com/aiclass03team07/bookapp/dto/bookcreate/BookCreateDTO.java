@@ -1,8 +1,10 @@
 package com.aiclass03team07.bookapp.dto.bookcreate;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class BookCreateDTO {
 
     private String title; // 도서 제목
