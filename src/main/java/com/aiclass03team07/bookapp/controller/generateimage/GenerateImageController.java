@@ -44,6 +44,7 @@ import com.aiclass03team07.bookapp.dto.generateimage.GenerateImageResponseDto;
 import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.service.generateimage.GenerateImageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/api/books/{bookId}")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class GenerateImageController {
 
 
@@ -96,5 +98,14 @@ public class GenerateImageController {
             @RequestBody GenerateImageRequestDto dto
     ){
         return generateImageService.saveOrUpdateImage(bookId, dto);
+    }
+    //생성 이미지 저장하기 위함
+    @PatchMapping
+    public ResponseEntity<GenerateImageResponseDto> updateBookCover(
+            @PathVariable("bookId") Long bookId,
+            @RequestBody GenerateImageRequestDto dto
+    ){
+        GenerateImageResponseDto responseDto = generateImageService.saveOrUpdateImage(bookId, dto);
+        return ResponseEntity.ok(responseDto);
     }
 }

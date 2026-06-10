@@ -25,6 +25,9 @@ public class BookEntity {
     @Column(name = "likes")
     private Long likes;
 
+    @Column(name = "isbn")
+    private String isbn;
+
     @Column(name = "content")
     private String content;
 
