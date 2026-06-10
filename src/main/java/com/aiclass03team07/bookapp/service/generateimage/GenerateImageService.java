@@ -25,6 +25,15 @@ public class GenerateImageService {
 
     @Value("${api.key}")
     private String apiKey;
+    public String getApiKeyForClient() {
+        return this.apiKey;
+    }
+    ///
+    public BookEntity getBookById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("도서를 찾을 수 없습니다. id = " + bookId));
+    }
+    ///
 
     public GenerateImageResponseDto saveOrUpdateImage(Long bookId, GenerateImageRequestDto dto){
 
@@ -70,7 +79,7 @@ public class GenerateImageService {
 
         String prompt = createPrompt(book, dto.getUserPrompt());
 
-        String base64Image = callOpenAiImageApi(prompt);
+        String base64Image = callOpenAiImageApi(prompt, dto.getImageModel(), dto.getResolution(), dto.getQuality());
 
         String imageUrl = "data:image/png;base64," + base64Image;
 
@@ -80,9 +89,12 @@ public class GenerateImageService {
         }
 
         image.setCoverImageUrl(imageUrl);
-        image.setImageModel("gpt-image-1");
-        image.setResolution("1024x1024");
-        image.setQuality("medium");
+//        image.setImageModel("gpt-image-2");
+//        image.setResolution("1024x1024");
+//        image.setQuality("medium");
+        image.setImageModel(dto.getImageModel() != null ? dto.getImageModel() : "dall-e-3");
+        image.setResolution(dto.getResolution() != null ? dto.getResolution() : "1024x1024");
+        image.setQuality(dto.getQuality() != null ? dto.getQuality() : "medium");
         image.setCoverPrompt(prompt);
 
         GenerateImageEntity savedImage = generateImageRepository.save(image);
@@ -114,18 +126,22 @@ public class GenerateImageService {
         );
     }
 
-    private String callOpenAiImageApi(String prompt){
+    private String callOpenAiImageApi(String prompt, String imageModel, String resolution, String quality){
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        String finalModel = (imageModel != null && !imageModel.isBlank()) ? imageModel : "gpt-image-2";
+        String finalSize = (resolution != null && !resolution.isBlank()) ? resolution : "1024x1024";
+        String finalQuality = (quality != null && !quality.isBlank()) ? quality : "medium";
+
         Map<String, Object> body = Map.of(
-                "model", "gpt-image-1",
+                "model", finalModel,
                 "prompt", prompt,
-                "size", "1024x1024",
-                "quality", "medium",
+                "size", finalSize,
+                "quality", finalQuality,
                 "n", 1
         );
 
