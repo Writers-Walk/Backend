@@ -50,7 +50,7 @@ public class BookEntity {
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "generateImage_id")
     private GenerateImageEntity generateImageEntity;
 }
