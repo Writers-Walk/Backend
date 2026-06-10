@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class BookCreateDTO {
-
+    // builder 삭제 해야함.
     private String title; // 도서 제목
     private String author; // 저자
     private String publisher; // 출판사
