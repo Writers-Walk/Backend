@@ -44,7 +44,7 @@ public class DetailService {
 //        BookDetail book = detailRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 //        return book.getLikesCount();
 //    }
-
+    // dddd
     public DetailDTO getBookDetail(Long id){
         BookEntity entity = bookRepository.findById(id).get();
         DetailDTO dto = new DetailDTO();
