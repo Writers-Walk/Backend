@@ -26,10 +26,16 @@ public class BookDetailController {
 
     @Operation(summary = "좋아요 + 1", description = "좋아요증가")
     @PostMapping("/book/{id}")
-    public ResponseEntity<BookCreateDTO> updateLikes(@PathVariable Long id) {
+    public ResponseEntity<DetailDTO> updateLikes(@PathVariable Long id) {
         return ResponseEntity.ok(bookDetailService.updateLikes(id));
     }
 
+    @Operation(summary = "도서삭제", description = "도서삭제")
+    @DeleteMapping("/book/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        bookDetailService.deleteBook(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
 
