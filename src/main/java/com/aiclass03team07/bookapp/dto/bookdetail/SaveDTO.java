@@ -1,4 +1,4 @@
-package com.aiclass03team07.bookapp.dto;
+package com.aiclass03team07.bookapp.dto.bookdetail;
 
 import lombok.Data;
 
