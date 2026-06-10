@@ -5,12 +5,14 @@ import com.aiclass03team07.bookapp.dto.generateimage.GenerateImageRequestDto;
 import com.aiclass03team07.bookapp.dto.generateimage.GenerateImageResponseDto;
 import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.entity.GenerateImageEntity;
+import com.aiclass03team07.bookapp.exception.BookNotFoundException;
 import com.aiclass03team07.bookapp.repository.BookRepository;
 import com.aiclass03team07.bookapp.repository.GenerateImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -22,80 +24,97 @@ public class GenerateImageService {
 
     private final BookRepository bookRepository;
     private final GenerateImageRepository generateImageRepository;
+    private final RestTemplate restTemplate;
 
     @Value("${api.key}")
     private String apiKey;
-    public String getApiKeyForClient() {
-        return this.apiKey;
-    }
-    ///
+
+//    public String getApiKeyForClient() {
+//        return this.apiKey;
+//    }
+
+    // 기본값 관리
+    private static final String DEFAULT_MODEL = "gpt-image-2";
+    private static final String DEFAULT_SIZE = "1024x1024";
+    private static final String DEFAULT_QUALITY = "medium";
+
+    // ──────────────────────────────────────────────
+    // 조회
+    // ──────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
     public BookEntity getBookById(Long bookId) {
-        return bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("도서를 찾을 수 없습니다. id = " + bookId));
-    }
-    ///
-
-    public GenerateImageResponseDto saveOrUpdateImage(Long bookId, GenerateImageRequestDto dto){
-
-        // 1. 책 찾기
-        BookEntity book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("도서를 찾을 수 없습니다. id = " + bookId));
-
-        // 2. 기존 이미지 있으면 가져오고, 없으면 새로 생성
-        GenerateImageEntity image = book.getGenerateImageEntity();
-
-        if(image == null){
-            image = new GenerateImageEntity();
-        }
-
-        // 3. DTO 값 넣기
-        image.setCoverImageUrl(dto.getCoverImageUrl());
-        image.setImageModel(dto.getImageModel());
-        image.setResolution(dto.getResolution());
-        image.setQuality(dto.getQuality());
-        image.setCoverPrompt(dto.getCoverPrompt());
-
-        // 4. 이미지 저장
-        GenerateImageEntity savedImage = generateImageRepository.save(image);
-
-        // 5. 책에 이미지 연결
-        book.setGenerateImageEntity(savedImage);
-        bookRepository.save(book);
-
-        // 6. 응답 DTO 반환
-        return GenerateImageResponseDto.from(savedImage);
+        return findBookOrThrow(bookId);
     }
 
+    @Transactional(readOnly = true)
     public GenerateImageResponseDto getImageByBookId(Long bookId){
-        BookEntity book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("도서를 찾을 수 없습니다. id = " + bookId));
-
+        BookEntity book = findBookOrThrow(bookId);
         return GenerateImageResponseDto.from(book.getGenerateImageEntity());
     }
 
-    public GenerateImageResponseDto generateAndSaveImage(Long bookId, GenerateImageCreateRequestDto dto){
-        BookEntity book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("도서를 찾을 수 없습니다. id = " + bookId));
+    // ──────────────────────────────────────────────
+    // 수동 저장/수정
+    // ──────────────────────────────────────────────
 
+    @Transactional
+    public GenerateImageResponseDto saveOrUpdateImage(Long bookId, GenerateImageRequestDto dto){
+
+        BookEntity book = findBookOrThrow(bookId);
+        return persist(
+                book,
+                dto.getCoverImageUrl(),
+                dto.getImageModel(),
+                dto.getResolution(),
+                dto.getQuality(),
+                dto.getCoverPrompt()
+        );
+    }
+
+    // ──────────────────────────────────────────────
+    // AI 표지 생성 + 저장
+    // ──────────────────────────────────────────────
+
+    public GenerateImageResponseDto generateAndSaveImage(Long bookId, GenerateImageCreateRequestDto dto){
+        BookEntity book = findBookOrThrow(bookId);
+
+        // 옵션값 확정
+        String model = resolve(dto.getImageModel(), DEFAULT_MODEL);
+        String size = resolve(dto.getResolution(), DEFAULT_SIZE);
+        String quality = resolve(dto.getQuality(), DEFAULT_QUALITY);
+
+        // 프롬프트 생성
         String prompt = createPrompt(book, dto.getUserPrompt());
 
-        String base64Image = callOpenAiImageApi(prompt, dto.getImageModel(), dto.getResolution(), dto.getQuality());
-
+        // 외부 API 호출
+        String base64Image = callOpenAiImageApi(prompt, model, size, quality);
         String imageUrl = "data:image/png;base64," + base64Image;
 
+        // 저장
+        return persist(book, imageUrl, model, size, quality, prompt);
+    }
+
+    // ──────────────────────────────────────────────
+    // 공통 저장 로직 (private)
+    // saveOrUpdateImage(@Transactional) 안에서 호출되면 트랜잭션이 적용
+    // ──────────────────────────────────────────────
+
+    private GenerateImageResponseDto persist(BookEntity book,
+                                             String coverImageUrl,
+                                             String imageModel,
+                                             String resolution,
+                                             String quality,
+                                             String coverPrompt){
         GenerateImageEntity image = book.getGenerateImageEntity();
         if(image == null){
             image = new GenerateImageEntity();
         }
 
-        image.setCoverImageUrl(imageUrl);
-//        image.setImageModel("gpt-image-2");
-//        image.setResolution("1024x1024");
-//        image.setQuality("medium");
-        image.setImageModel(dto.getImageModel() != null ? dto.getImageModel() : "dall-e-3");
-        image.setResolution(dto.getResolution() != null ? dto.getResolution() : "1024x1024");
-        image.setQuality(dto.getQuality() != null ? dto.getQuality() : "medium");
-        image.setCoverPrompt(prompt);
+        image.setCoverImageUrl(coverImageUrl);
+        image.setImageModel(imageModel);
+        image.setResolution(resolution);
+        image.setQuality(quality);
+        image.setCoverPrompt(coverPrompt);
 
         GenerateImageEntity savedImage = generateImageRepository.save(image);
 
@@ -103,6 +122,19 @@ public class GenerateImageService {
         bookRepository.save(book);
 
         return GenerateImageResponseDto.from(savedImage);
+    }
+
+    // ──────────────────────────────────────────────
+    // 헬퍼
+    // ──────────────────────────────────────────────
+
+    private BookEntity findBookOrThrow(Long bookId){
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
+    }
+
+    private String resolve(String value, String defaultValue){
+        return (value != null && !value.isBlank()) ? value : defaultValue;
     }
 
     private String createPrompt(BookEntity book, String userPrompt){
@@ -126,22 +158,17 @@ public class GenerateImageService {
         );
     }
 
-    private String callOpenAiImageApi(String prompt, String imageModel, String resolution, String quality){
-        RestTemplate restTemplate = new RestTemplate();
+    private String callOpenAiImageApi(String prompt, String model, String size, String quality){
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String finalModel = (imageModel != null && !imageModel.isBlank()) ? imageModel : "gpt-image-2";
-        String finalSize = (resolution != null && !resolution.isBlank()) ? resolution : "1024x1024";
-        String finalQuality = (quality != null && !quality.isBlank()) ? quality : "medium";
-
         Map<String, Object> body = Map.of(
-                "model", finalModel,
+                "model", model,
                 "prompt", prompt,
-                "size", finalSize,
-                "quality", finalQuality,
+                "size", size,
+                "quality", quality,
                 "n", 1
         );
 
@@ -158,12 +185,14 @@ public class GenerateImageService {
             throw new RuntimeException("이미지 생성 응답 body가 비어 있습니다.");
         }
 
+        @SuppressWarnings("unchecked")
         List<Map<String, Object>> data = (List<Map<String, Object>>) response.getBody().get("data");
 
         if(data == null || data.isEmpty()){
             throw new RuntimeException("이미지 생성 응답 data가 비어 있습니다.");
         }
 
+        // gpt-image 항상 base64로 반환
         String base64Image = (String) data.get(0).get("b64_json");
 
         if(base64Image == null || base64Image.isBlank()){
