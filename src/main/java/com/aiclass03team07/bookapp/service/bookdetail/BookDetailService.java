@@ -62,7 +62,7 @@ public class BookDetailService {
                 .publisher(book.getPublisher())
                 .publishedDt(book.getPublishedDt())
                 .seriesInfo(book.getSeriesInfo())
-                .isbn(book.getIsbn())
+                //.isbn(book.getIsbn())
                 .genre(book.getGenre())
                 .content(book.getContent())
                 .build();
