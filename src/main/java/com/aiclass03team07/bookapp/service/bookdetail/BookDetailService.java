@@ -12,6 +12,7 @@ public class BookDetailService {
 
     private final BookRepository bookRepository;
 
+    //ㅁㄴ
     // 좋아요 +1
     public BookCreateDTO updateLikes(Long id) {
         BookEntity book = bookRepository.findById(id)
