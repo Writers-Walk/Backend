@@ -17,4 +17,7 @@ public class DetailDTO {
     private String publicationDt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void setoverI() {
+    }
 }

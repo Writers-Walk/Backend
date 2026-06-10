@@ -1,9 +1,7 @@
 package com.aiclass03team07.bookapp;
 
-import com.aiclass03team07.bookapp.entity.BookDetail;
 import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.repository.BookRepository;
-import com.aiclass03team07.bookapp.repository.DetailRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

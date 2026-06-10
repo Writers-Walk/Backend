@@ -13,8 +13,7 @@ public class GenerateImageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(name = "coverImageUrl", columnDefinition = "LONGTEXT")
+    @Column(name = "cover_Image_Url")
     private String coverImageUrl;
 
     @Column(name = "imageModel")
