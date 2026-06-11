@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -20,5 +22,8 @@ public class UserEntity {
 
     @Column(name = "role")
     private String role;
+
+    @OneToMany(mappedBy = "userentity", cascade = CascadeType.ALL)
+    private List<ReviewEntity> reveiwlist;
 
 }

@@ -19,15 +19,15 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @Operation(summary = "해당 책의 리뷰 데이터 모두 가져오는 api", description = "책id 받아서 그 해당 책들의 리뷰를 다 가져옴")
-    @GetMapping("/getall")
+    @GetMapping("/{id}/getallreview")
     public List<GetReviewDTO> getReviewAll(@PathVariable Long id){
         return reviewService.selectReviewAll(id);
     }
 
-    @Operation(summary = "해당 책의 리뷰 저장하는 api", description = "리뷰에 저장할 데이터 받아서 저장")
-    @PostMapping("/getall")
-    public ResponseEntity<SaveReviewDTO> saveReview(@RequestBody SaveReviewDTO dto){
-        reviewService.saveReview(dto);
+    @Operation(summary = "해당 책의 리뷰 저장하는 api", description = "리뷰에 저장할 데이터 와 책id 받아서 저장")
+    @PostMapping("/{id}/save")
+    public ResponseEntity<SaveReviewDTO> saveReview(@PathVariable Long id,@RequestBody SaveReviewDTO dto){
+        reviewService.saveReview(id,dto);
         return ResponseEntity.ok(dto);
     }
 
