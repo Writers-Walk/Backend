@@ -1,15 +1,19 @@
 package com.aiclass03team07.bookapp.controller.mainpage;
 
 import com.aiclass03team07.bookapp.dto.mainpage.BookListDTO;
+import com.aiclass03team07.bookapp.service.mainpage.MainBannerService;
 import com.aiclass03team07.bookapp.service.mainpage.MainPageService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,6 +24,7 @@ import java.util.List;
 public class MainBookController {
 
     private final MainPageService mainPageService;
+    private final MainBannerService mainBannerService;
 
     @Operation(summary = "도서 목록 조회", description = "전체 도서 목록 가져오기")
     @GetMapping("/getall")
@@ -48,4 +53,20 @@ public class MainBookController {
     public List<String> getGenres() {
         return mainPageService.getGenres();
     }
+
+
+
+//    @Operation(summary = "신간 책 광고", description = "가장 최근에 등록된 책")
+//    @GetMapping("/newbook")
+//    public MainBannerDTO getLatestBook(){
+//        return mainBannerService.getLatestBook();
+//    }
+//
+//    @Operation(summary = "이번 주 베스트 책", description = "좋아요 가장 많은 책")
+//    @GetMapping("/bestbook")
+//    public BookEntity getWeeklyBestBook() {
+//        return mainBannerService.getMostLikedBook();
+//    }
+
+
 }
