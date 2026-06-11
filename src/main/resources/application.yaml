@@ -33,6 +33,7 @@ server:
 logging:
   level:
     org:
+      springdoc: DEBUG
       springframework:
         web: DEBUG
 
