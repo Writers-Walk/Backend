@@ -37,10 +37,11 @@ public class MainBannerService {
     //관리자 계정일때 배너 생성하는
 
 
-    public BookEntity getMostLikedBook() {
-        return bookRepository.findTopByOrderByLikesDesc();
-    }
+//    public BookEntity getMostLikedBook() {
+//        return bookRepository.findTopByOrderByLikesDesc();
+//    }
 
+    //entity -> dto
     private MainBannerDTO convertToDTO (BannerImageUrlEntity entity){
         MainBannerDTO dto = new MainBannerDTO();
         dto.setLatesturl(entity.getLatestBanner());
