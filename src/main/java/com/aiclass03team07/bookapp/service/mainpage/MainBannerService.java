@@ -35,7 +35,7 @@ public class MainBannerService {
     private static final String DEFAULT_SIZE = "3840x1536";
     private static final String DEFAULT_QUALITY = "medium";
 
-
+    //2
     //배너 이미지 3개 가져오는
     public MainBannerDTO selectBanners(){
         return bannerImageUrlRepository.findById(1L).map(this::convertToDTO)
