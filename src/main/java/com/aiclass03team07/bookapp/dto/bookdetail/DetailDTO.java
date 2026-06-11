@@ -9,7 +9,7 @@ public class DetailDTO {
     private Long id;
     private String title;
     private String author;
-    private Long likes;
+    //   private Long likes;
     private String content;
     private String genre;
     private String publisher;
@@ -18,6 +18,8 @@ public class DetailDTO {
     private String publicationDt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean wished;
+    private Long wishCount;
 
     public void setoverI() {
     }
