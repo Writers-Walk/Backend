@@ -22,7 +22,7 @@ public class BookCreateService {
         BookEntity entity = new BookEntity();
         entity.setTitle(dto.getTitle());
         entity.setAuthor(dto.getAuthor());
-        entity.setLikes(0L);
+  //      entity.setLikes(0L);
         entity.setContent(dto.getContent());
         entity.setGenre(dto.getGenre());
         entity.setPublisher(dto.getPublisher());

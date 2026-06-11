@@ -14,4 +14,6 @@ public class BookListDTO {
     private String coverImageUrl;   // GenerateImage에서 가져옴
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean wished;
+    private Long wishCount;
 }
