@@ -25,7 +25,7 @@ public class BookDetailService {
 
     private static final Long HARDCODED_USER_ID = 1L; // 나중에 로그인 구현 시 지우기
 
-    // id 정보조회
+    // id 정보조회.
     @Transactional(readOnly = true)
     public DetailDTO getBookDetail(Long id, Long userId) {
 
