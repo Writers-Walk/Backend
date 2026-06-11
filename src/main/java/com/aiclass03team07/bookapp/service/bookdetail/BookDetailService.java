@@ -5,6 +5,7 @@ import com.aiclass03team07.bookapp.dto.mainpage.BookListDTO;
 import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.entity.GenerateImageEntity;
 import com.aiclass03team07.bookapp.entity.WishListEntity;
+import com.aiclass03team07.bookapp.exception.BookNotFoundException;
 import com.aiclass03team07.bookapp.repository.BookRepository;
 import com.aiclass03team07.bookapp.repository.GenerateImageRepository;
 import com.aiclass03team07.bookapp.repository.WishlistRepository;
@@ -23,18 +24,12 @@ public class BookDetailService {
     private final GenerateImageRepository generateImageRepository;
     private final WishlistRepository wishlistRepository;
 
-    private static final Long HARDCODED_USER_ID = 1L; // 나중에 로그인 구현 시 지우기
-
     // id 정보조회.
     @Transactional(readOnly = true)
     public DetailDTO getBookDetail(Long id, Long userId) {
 
         BookEntity entity = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found: " + id));
-
-        if (userId == null) {
-            userId = HARDCODED_USER_ID;
-        }
+                .orElseThrow(() -> new BookNotFoundException(id));
 
         GenerateImageEntity generateImage = entity.getGenerateImageEntity();
 
@@ -50,8 +45,9 @@ public class BookDetailService {
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
 
-        // 사용자 찜 여부
-        dto.setWished(wishlistRepository.findByUserIdAndBookId(userId, id).isPresent());
+        // 사용자 찜 - 비로그인시에는 x
+        dto.setWished(userId != null
+                && wishlistRepository.findByUserIdAndBookId(userId, id).isPresent());
 
         // 전체 찜 개수
         dto.setWishCount(wishlistRepository.countByBookId(id));
@@ -66,12 +62,8 @@ public class BookDetailService {
     @Transactional
     public DetailDTO bookWishList(Long id, Long userId) {
 
-        if (userId == null) {
-            userId = HARDCODED_USER_ID;
-        }
-
         BookEntity book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found: " + id));
+                .orElseThrow(() -> new BookNotFoundException(id));
 
         var existing = wishlistRepository.findByUserIdAndBookId(userId, id);
 
@@ -103,9 +95,6 @@ public class BookDetailService {
     @Transactional(readOnly = true)
     public List<BookListDTO> getMainBookList(Long userId) {
 
-        if (userId == null) {
-            userId = HARDCODED_USER_ID;
-        }
         final Long finalUserId = userId;
 
         List<BookEntity> books = bookRepository.findAll();
@@ -124,7 +113,9 @@ public class BookDetailService {
             }
 
             dto.setWishCount(wishlistRepository.countByBookId(book.getId()));
-            dto.setWished(wishlistRepository.findByUserIdAndBookId(finalUserId, book.getId()).isPresent());
+            // 비로그인 x
+            dto.setWished(finalUserId != null
+                    && wishlistRepository.findByUserIdAndBookId(finalUserId, book.getId()).isPresent());
 
             return dto;
         }).collect(Collectors.toList());
