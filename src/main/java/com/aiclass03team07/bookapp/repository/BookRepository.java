@@ -16,4 +16,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
     @Query("SELECT DISTINCT b.genre FROM BookEntity b WHERE b.genre IS NOT NULL ORDER BY b.genre")
     List<String> findDistinctGenres();
+
+    //좋아요가 가장 많은 책 1권 가져오기
+    BookEntity findTopByOrderByLikesDesc();
 }
