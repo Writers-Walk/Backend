@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -69,4 +70,7 @@ public class BookEntity {
     @OneToOne
     @JoinColumn(name = "generateImage_id")
     private GenerateImageEntity generateImageEntity;
+
+    @OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
+    private List<ReviewEntity> reviewEntities;
 }

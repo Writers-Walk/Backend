@@ -42,6 +42,7 @@ public class MainBookController {
             @RequestParam(defaultValue = "10") int topN) {
         return mainPageService.getTopRanking(genre, topN);
     }
+
     @Operation(summary = "장르 목록", description = "등록된 도서의 전체 장르 목록")
     @GetMapping("/genres")
     public List<String> getGenres() {
