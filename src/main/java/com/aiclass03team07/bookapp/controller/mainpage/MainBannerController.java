@@ -1,14 +1,13 @@
 package com.aiclass03team07.bookapp.controller.mainpage;
 
+import com.aiclass03team07.bookapp.dto.mainpage.CreateBannerDTO;
 import com.aiclass03team07.bookapp.dto.mainpage.MainBannerDTO;
 import com.aiclass03team07.bookapp.service.mainpage.MainBannerService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +24,11 @@ public class MainBannerController {
 
     @Operation(summary = "관리자가 요청하면 광고 배너 생성 api", description = "['신간 소개', '이 주의 책'] 둘중 하나 선택해서 같이 보내줘야함 그러고 db에 이미지 생성 ")
     @PostMapping("/createbanner")
-    public
+    public ResponseEntity<CreateBannerDTO> createbanner(@RequestBody CreateBannerDTO dto){
+        mainBannerService.makeBanner(dto);
+        return ResponseEntity.ok(dto);
+    }
+
     //    @Operation(summary = "신간 책 광고", description = "가장 최근에 등록된 책")
 //    @GetMapping("/newbook")
 //    public MainBannerDTO getLatestBook(){
