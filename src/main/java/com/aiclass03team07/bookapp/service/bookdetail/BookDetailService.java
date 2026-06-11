@@ -73,7 +73,7 @@ public class BookDetailService {
         BookEntity book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book not found: " + id));
 
-        var existing = wishlistRepository.findByUserIdAndBookId(userId, id);
+        var existing = wishlistRepository.findByUserIdAndBookId(userId, id); //******수정 요망*******
 
         boolean isWishedNow;
         long count = wishlistRepository.countByBookId(id);
