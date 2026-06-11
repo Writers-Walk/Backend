@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,8 +30,8 @@ public class BookEntity {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "likes")
-    private Long likes;
+//    @Column(name = "likes")  좋아요 삭제
+//    private Long likes;
 
     //@NotBlank(message = "내용은 필수입니다.")
     @Size(max = 1000, message = "내용은 1000자 이하로 입력해주세요.")
@@ -69,4 +70,7 @@ public class BookEntity {
     @OneToOne
     @JoinColumn(name = "generateImage_id")
     private GenerateImageEntity generateImageEntity;
+
+    @OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
+    private List<ReviewEntity> reviewEntities;
 }

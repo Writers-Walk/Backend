@@ -1,0 +1,31 @@
+package com.aiclass03team07.bookapp.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+public class UserEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "userId", unique = true, nullable = false)
+    private String userId;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "role")
+    private String role;
+
+
+    @OneToMany(mappedBy = "userentity", cascade = CascadeType.ALL)
+    private List<ReviewEntity> reveiwlist;
+
+}
+
