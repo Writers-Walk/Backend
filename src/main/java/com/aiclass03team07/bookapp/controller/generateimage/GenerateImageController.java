@@ -5,6 +5,7 @@ import com.aiclass03team07.bookapp.dto.generateimage.GenerateImageRequestDto;
 import com.aiclass03team07.bookapp.dto.generateimage.GenerateImageResponseDto;
 import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.service.generateimage.GenerateImageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class GenerateImageController {
     @PostMapping("/generate")
     public GenerateImageResponseDto generateImage(
             @PathVariable Long bookId,
-            @RequestBody GenerateImageCreateRequestDto dto
+            @Valid @RequestBody GenerateImageCreateRequestDto dto   //예외처리
     ){
         return generateImageService.generateAndSaveImage(bookId, dto);
     }
