@@ -26,6 +26,9 @@ public class ReviewEntity {
     private LocalDateTime createdAt;
 
     //여기 책 과 1대1 연결
+    @OneToOne
+    @JoinColumn(name = "generateImage_id")
+    private GenerateImageEntity generateImageEntity;
 
     //여기 user랑 1대n 연결
 
