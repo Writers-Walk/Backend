@@ -1,6 +1,7 @@
 package com.aiclass03team07.bookapp.controller.mainpage;
 
 import com.aiclass03team07.bookapp.dto.mainpage.BookListDTO;
+import com.aiclass03team07.bookapp.dto.mainpage.MainBannerDTO;
 import com.aiclass03team07.bookapp.service.mainpage.MainBannerService;
 import com.aiclass03team07.bookapp.service.mainpage.MainPageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,6 +53,12 @@ public class MainBookController {
     @GetMapping("/genres")
     public List<String> getGenres() {
         return mainPageService.getGenres();
+    }
+
+    @Operation(summary = "배너 이미지 3개 가져오는 api" , description = "각각 이미지 하나씩 경로 가져옴")
+    @GetMapping("/banner/get")
+    public MainBannerDTO getBannerurl(){
+        return mainBannerService.selectBanners();
     }
 
 
