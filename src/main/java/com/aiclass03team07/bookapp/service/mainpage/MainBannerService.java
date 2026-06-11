@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MainBannerService {
     private  final BookRepository bookRepository;
+
     public BookEntity getLatestBook() {
         // 0페이지에서 1개만 가져오되, createdAt 기준으로 내림차순 정렬
         Page<BookEntity> page = bookRepository.findAll(
@@ -20,6 +21,7 @@ public class MainBannerService {
 
 
         );
+
     //book 정보 넣고 저장
     public void saveBookInfo(BookCreateDTO dto){
         BookEntity entity = convertToBookEntity(dto);
@@ -51,6 +53,5 @@ public class MainBannerService {
         return bookRepository.findTopByOrderByLikesDesc();
     }
 
-
-
+    
 }
