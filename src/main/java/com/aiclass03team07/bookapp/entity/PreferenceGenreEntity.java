@@ -18,4 +18,6 @@ public class PreferenceGenreEntity {
 
     @Column(name = "genre")
     private String genre;
+
 }
+

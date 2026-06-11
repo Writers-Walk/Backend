@@ -23,7 +23,9 @@ public class UserEntity {
     @Column(name = "role")
     private String role;
 
+
     @OneToMany(mappedBy = "userentity", cascade = CascadeType.ALL)
     private List<ReviewEntity> reveiwlist;
 
 }
+
