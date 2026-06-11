@@ -41,6 +41,7 @@ public class UserService {
                     PreferenceGenreEntity preferenceGenre= new PreferenceGenreEntity();
                     preferenceGenre.setUser(savedUser);
                     preferenceGenre.setGenre(genreName);
+                    preferenceRepository.save(preferenceGenre);
                 }
             }
         }
