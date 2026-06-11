@@ -1,7 +1,6 @@
 package com.aiclass03team07.bookapp.controller.mainpage;
 
 import com.aiclass03team07.bookapp.dto.mainpage.BookListDTO;
-import com.aiclass03team07.bookapp.dto.mainpage.MainBannerDTO;
 import com.aiclass03team07.bookapp.service.mainpage.MainBannerService;
 import com.aiclass03team07.bookapp.service.mainpage.MainPageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,25 +54,11 @@ public class MainBookController {
         return mainPageService.getGenres();
     }
 
-    @Operation(summary = "배너 이미지 3개 가져오는 api" , description = "각각 이미지 하나씩 경로 가져옴")
-    @GetMapping("/banner/get")
-    public MainBannerDTO getBannerurl(){
-        return mainBannerService.selectBanners();
-    }
 
 
 
-//    @Operation(summary = "신간 책 광고", description = "가장 최근에 등록된 책")
-//    @GetMapping("/newbook")
-//    public MainBannerDTO getLatestBook(){
-//        return mainBannerService.getLatestBook();
-//    }
-//
-//    @Operation(summary = "이번 주 베스트 책", description = "좋아요 가장 많은 책")
-//    @GetMapping("/bestbook")
-//    public BookEntity getWeeklyBestBook() {
-//        return mainBannerService.getMostLikedBook();
-//    }
+
+
 
 
 }

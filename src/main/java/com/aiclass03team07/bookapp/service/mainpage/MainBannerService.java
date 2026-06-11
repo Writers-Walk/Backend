@@ -41,6 +41,7 @@ public class MainBannerService {
 //        return bookRepository.findTopByOrderByLikesDesc();
 //    }
 
+    //entity -> dto
     private MainBannerDTO convertToDTO (BannerImageUrlEntity entity){
         MainBannerDTO dto = new MainBannerDTO();
         dto.setLatesturl(entity.getLatestBanner());
