@@ -26,7 +26,12 @@ public class ReviewEntity {
     private LocalDateTime createdAt;
 
     //여기 책 과 1대1 연결
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private BookEntity bookEntity;
 
     //여기 user랑 1대n 연결
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userentity_id")
+    private UserEntity userentity;
 }
