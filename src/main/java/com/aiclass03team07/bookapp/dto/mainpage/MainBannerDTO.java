@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MainBannerDTO {
-
-    private String coverImageUrl;
-
+    private String latesturl;
+    private String besturl;
+    private String aiRecommendurl;
 }
