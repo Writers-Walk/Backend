@@ -1,37 +1,30 @@
 package com.aiclass03team07.bookapp.service.mainpage;
 
 
-import com.aiclass03team07.bookapp.dto.bookcreate.BookCreateDTO;
 import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MainBannerService {
     private  final BookRepository bookRepository;
+    public BookEntity getLatestBook() {
+        // 0페이지에서 1개만 가져오되, createdAt 기준으로 내림차순 정렬
+        Page<BookEntity> page = bookRepository.findAll(
+                PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "createdAt"))
 
-    //book 정보 넣고 저장
-    public void saveBookInfo(BookCreateDTO dto){
-        BookEntity entity = convertToBookEntity(dto);
-        bookRepository.save(entity);
+        );
+
+        // 데이터가 있으면 반환, 없으면 null 반환
+        return page.hasContent() ? page.getContent().get(0) : null;
     }
-
-    //dto -> entity
-    private BookEntity convertToBookEntity (BookCreateDTO dto){
-        BookEntity entity = new BookEntity();
-        entity.setTitle(dto.getTitle());
-        entity.setAuthor(dto.getAuthor());
-        entity.setLikes(0L);
-        entity.setContent(dto.getContent());
-        entity.setGenre(dto.getGenre());
-        entity.setPublisher(dto.getPublisher());
-        entity.setSeriesInfo(dto.getSeriesInfo());
-        entity.setPublishedDt(dto.getPublishedDt());
-        entity.setUpdatedAt(null);
-
-        return entity;
+    public BookEntity getMostLikedBook() {
+        return bookRepository.findTopByOrderByLikesDesc();
     }
 
 }

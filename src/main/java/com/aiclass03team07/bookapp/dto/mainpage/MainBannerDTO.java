@@ -4,8 +4,7 @@ import lombok.Data;
 
 @Data
 public class MainBannerDTO {
-    private Long id;
-    private String title;
+
     private String coverImageUrl;
 
 }
