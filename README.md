@@ -91,7 +91,9 @@ bookapp/
                             │   ├── PasswordConfig.java            # 비밀번호 암호화 관련 Bean 설정
                             │   ├── RestTemplateConfig.java        # 외부 API 호출용 RestTemplate 설정
                             │   ├── SwaggerConfig.java             # Swagger/OpenAPI 문서 설정
-                            │   └── WebMvcConfig.java              # CORS 등 Web MVC 설정
+                            │   ├── WebMvcConfig.java              # CORS 등 Web MVC 설정
+                            │   ├── SecurityConfig.java            # Spring Security 인증/인가 설정
+                            │   └── WebConfig.java                 # 추가 Web MVC 공통 설정
                             ├── controller/                        # 클라이언트 요청을 받는 API 계층
                             │   ├── bookcreate/
                             │   │   └── BookCreateController.java  # 도서 등록, 배너 업로드 API
