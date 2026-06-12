@@ -308,34 +308,8 @@ spring:
 
 ---
 
-## 7. 주요 화면
 
-<div align="center">
-
-  <img width="1200" alt="메인 화면 1" src="https://github.com/user-attachments/assets/70f6b718-d9b6-4bff-aa51-0d619b0fab77" />
-  <br/><br/>
-
-  <img width="1200" alt="메인 화면 2" src="https://github.com/user-attachments/assets/7cbcaef2-f390-4176-84ee-78b32be8ccc9" />
-  <br/><br/>
-
-  <img width="1200" alt="도서 등록 화면" src="https://github.com/user-attachments/assets/27a36a25-6783-417b-981b-107652e6454f" />
-  <br/><br/>
-
-  <img width="1200" alt="AI 표지 이미지 생성 화면 1" src="https://github.com/user-attachments/assets/f44803bc-f87e-4a00-830a-3d470d606e8c" />
-  <br/><br/>
-
-  <img width="1200" alt="AI 표지 이미지 생성 화면 2" src="https://github.com/user-attachments/assets/8a6d7330-bf89-4281-9362-97929af4eb03" />
-  <br/><br/>
-
-  <img width="1200" alt="도서 상세 화면" src="https://github.com/user-attachments/assets/f483c4f7-25ab-46ba-98d4-6deec1cd7d97" />
-
-</div>
-
-
-
----
-
-## 8. H2 데이터베이스 구조
+## 7. H2 데이터베이스 구조
 
 > 본 프로젝트는 `db.json`이 아니라 H2 인메모리 데이터베이스를 사용합니다.  
 > 애플리케이션 실행 시 JPA 설정에 따라 테이블이 자동 생성됩니다.
