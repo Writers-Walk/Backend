@@ -40,7 +40,7 @@ public class MainBookController {
         Pageable pageable = PageRequest.of(page, size, sort);
         return mainPageService.getAllBooks(keyword, pageable);
     }
-    @Operation(summary = "좋아요 랭킹", description = "좋아요 상위 N권 조회")
+    @Operation(summary = "찜 랭킹", description = "찜하기 상위 N권 조회")
     @GetMapping("/ranking")
     public List<BookListDTO> getRanking(
             @RequestParam(defaultValue = "") String genre,

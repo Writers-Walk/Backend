@@ -3,6 +3,7 @@ package com.aiclass03team07.bookapp.controller.user;
 import com.aiclass03team07.bookapp.dto.user.UserJoinRequestDto;
 import com.aiclass03team07.bookapp.dto.user.UserLoginRequestDto;
 import com.aiclass03team07.bookapp.entity.UserEntity;
+import com.aiclass03team07.bookapp.exception.LoginFailedException;
 import com.aiclass03team07.bookapp.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -82,7 +83,7 @@ public class UserController {
 
             return ResponseEntity.ok(response);
         }
-        catch (IllegalArgumentException e){
+        catch (LoginFailedException e){
             response.put("status", "fail");
             response.put("message", e.getMessage());
             return ResponseEntity.status(400).body(response);

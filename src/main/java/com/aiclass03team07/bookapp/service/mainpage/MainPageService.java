@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,15 +32,16 @@ public class MainPageService {
                 .map(this::convertToBookListDTO);
     }
 
-    // 좋아요 top N (전체 기준, 페이징과 무관)
+    // 찜 개수 top N
     public List<BookListDTO> getTopRanking(String genre, int topN) {
-        Pageable pageable = PageRequest.of(0, topN, Sort.by("id").descending());
-
-        Page<BookEntity> page = (genre == null || genre.isBlank())
-                ? bookRepository.findAll(pageable)              // 전체 랭킹
-                : bookRepository.findByGenre(genre, pageable);  // 장르별 랭킹
-
-        return page.map(this::convertToBookListDTO).getContent();
+        return bookRepository.findAll().stream()
+                .filter(b -> genre == null || genre.isBlank() || genre.equals(b.getGenre()))
+                .map(this::convertToBookListDTO)
+                .sorted(Comparator.comparingLong(
+                        (BookListDTO dto) -> dto.getWishCount() == null ? 0L : dto.getWishCount()
+                ).reversed())
+                .limit(topN)
+                .collect(Collectors.toList());
     }
     public List<String> getGenres() {
         return bookRepository.findDistinctGenres();
