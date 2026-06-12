@@ -352,29 +352,102 @@ npm run dev
 
 ---
 
-## 8. db.json 데이터 구조
+## 8. H2 데이터베이스 구조
 
-> `db.json`은 보안상 `.gitignore`에 포함되어 있습니다.
+> 본 프로젝트는 `db.json`이 아니라 H2 인메모리 데이터베이스를 사용합니다.  
+> 애플리케이션 실행 시 JPA 설정에 따라 테이블이 자동 생성됩니다.
+
+### BookEntity
+
+도서 정보를 저장하는 테이블입니다.
 
 | 필드명 | 타입 | 설명 |
 |---|---|---|
-| `id` | string | 식별자 (json-server 자동 부여) |
-| `title` | string | 도서 제목 |
-| `author` | string | 저자 |
-| `likes` | number | 좋아요 수 |
-| `content` | string | 도서 내용 |
-| `genre` | string | 장르 |
-| `coverImageUrl` | string | 표지 이미지 경로 (Base64 또는 URL) |
-| `publisher` | string | 출판사 |
-| `seriesInfo` | string | 총서사항 |
-| `publicationDt` | string | 출간일 |
-| `createdAt` | string | 등록일 (ISO 8601 형식) |
-| `updatedAt` | string | 수정일 (ISO 8601 형식) |
-| `imageModel` | string | AI 생성 모델명 |
-| `resolution` | string | 이미지 해상도 |
-| `quality` | string | 이미지 품질 (`low` / `medium` / `high`) |
-| `coverPrompt` | string | 이미지 생성에 사용된 프롬프트 |
+| `id` | Long | 도서 식별자, 자동 증가 |
+| `title` | String | 도서 제목 |
+| `author` | String | 저자 |
+| `isbn` | String | ISBN |
+| `content` | String | 도서 내용 |
+| `genre` | String | 장르 |
+| `publisher` | String | 출판사 |
+| `seriesInfo` | String | 총서사항 |
+| `publishedDt` | String | 발행년도 |
+| `createdAt` | LocalDateTime | 등록일, 자동 생성 |
+| `updatedAt` | LocalDateTime | 수정일 |
+| `generateImageEntity` | GenerateImageEntity | 도서 표지 이미지 정보와 1:1 연결 |
+| `reviewEntities` | List<ReviewEntity> | 도서 리뷰 목록 |
 
+### GenerateImageEntity
+
+AI 표지 이미지 정보를 저장하는 테이블입니다.
+
+| 필드명 | 타입 | 설명 |
+|---|---|---|
+| `id` | Long | 이미지 식별자, 자동 증가 |
+| `coverImageUrl` | String | 표지 이미지 경로 또는 Base64 Data URL |
+| `imageModel` | String | AI 이미지 생성 모델명 |
+| `resolution` | String | 이미지 해상도 |
+| `quality` | String | 이미지 품질 |
+| `coverPrompt` | String | 이미지 생성에 사용된 프롬프트 |
+| `bookEntity` | BookEntity | 연결된 도서 정보 |
+
+### UserEntity
+
+사용자 정보를 저장하는 테이블입니다.
+
+| 필드명 | 타입 | 설명 |
+|---|---|---|
+| `id` | Long | 사용자 식별자, 자동 증가 |
+| `userId` | String | 로그인 아이디, 중복 불가 |
+| `password` | String | 암호화된 비밀번호 |
+| `role` | String | 사용자 권한 |
+| `reveiwlist` | List<ReviewEntity> | 사용자가 작성한 리뷰 목록 |
+
+### ReviewEntity
+
+도서 리뷰 정보를 저장하는 테이블입니다.
+
+| 필드명 | 타입 | 설명 |
+|---|---|---|
+| `id` | Long | 리뷰 식별자, 자동 증가 |
+| `content` | String | 리뷰 내용 |
+| `rating` | Long | 평점 |
+| `createdAt` | LocalDateTime | 리뷰 작성일, 자동 생성 |
+| `bookEntity` | BookEntity | 리뷰가 작성된 도서 |
+| `userentity` | UserEntity | 리뷰 작성자 |
+
+### WishListEntity
+
+사용자의 도서 찜 정보를 저장하는 테이블입니다.
+
+| 필드명 | 타입 | 설명 |
+|---|---|---|
+| `id` | Long | 찜 식별자, 자동 증가 |
+| `userId` | Long | 사용자 식별자 |
+| `bookId` | Long | 도서 식별자 |
+
+> `userId`와 `bookId` 조합은 중복 저장되지 않도록 unique 제약조건이 설정되어 있습니다.
+
+### PreferenceGenreEntity
+
+사용자 선호 장르 정보를 저장하는 테이블입니다.
+
+| 필드명 | 타입 | 설명 |
+|---|---|---|
+| `id` | Long | 선호 장르 식별자, 자동 증가 |
+| `user` | UserEntity | 연결된 사용자 |
+| `genre` | String | 선호 장르 |
+
+### BannerImageUrlEntity
+
+메인 배너 이미지 URL을 저장하는 테이블입니다.
+
+| 필드명 | 타입 | 설명 |
+|---|---|---|
+| `id` | Long | 배너 식별자, 자동 증가 |
+| `latestBanner` | String | 최신 도서 배너 이미지 URL |
+| `bestBanner` | String | 인기 도서 배너 이미지 URL |
+| `aiRecommendBanner` | String | AI 추천 도서 배너 이미지 URL |
 ---
 
 ## 팀원
