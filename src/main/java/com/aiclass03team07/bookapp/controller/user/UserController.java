@@ -3,6 +3,7 @@ package com.aiclass03team07.bookapp.controller.user;
 import com.aiclass03team07.bookapp.dto.user.UserJoinRequestDto;
 import com.aiclass03team07.bookapp.dto.user.UserLoginRequestDto;
 import com.aiclass03team07.bookapp.entity.UserEntity;
+import com.aiclass03team07.bookapp.exception.LoginFailedException;
 import com.aiclass03team07.bookapp.service.user.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -84,7 +85,7 @@ public class UserController {
 
             return ResponseEntity.ok(response);
         }
-        catch (IllegalArgumentException e){
+        catch (LoginFailedException e){
             response.put("status", "fail");
             response.put("message", e.getMessage());
             return ResponseEntity.status(400).body(response);
@@ -131,12 +132,16 @@ public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletRespon
 // 현재 로그인 유저 권한 (프론트에 권한 전달용)
     @GetMapping("/me")
     public ResponseEntity<?> me(HttpSession session) {
-        Long Id = (Long) session.getAttribute("loginUser");
-        if (Id == null) {
-            return ResponseEntity.status(401).build();   // 로그인 안 됨
+        Long id = (Long) session.getAttribute("loginUser");
+        if (id == null) {
+            // 비로그인도 정상 상태 → 200 (브라우저 콘솔 빨간 줄 방지)
+            return ResponseEntity.ok(Map.of("loggedIn", false));
         }
         String role = (String) session.getAttribute("role");
-        // userId, role을 DTO로 반환 (프론트가 이걸로 버튼 분기)
-        return ResponseEntity.ok(Map.of("userId", Id, "role", role));
+        Map<String, Object> body = new HashMap<>();
+        body.put("loggedIn", true);
+        body.put("userId", id);
+        body.put("role", role);
+        return ResponseEntity.ok(body);
     }
 }
