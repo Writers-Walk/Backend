@@ -4,6 +4,7 @@ import com.aiclass03team07.bookapp.dto.mainpage.BookListDTO;
 import com.aiclass03team07.bookapp.service.mainpage.MainBannerService;
 import com.aiclass03team07.bookapp.service.mainpage.MainPageService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,12 +34,14 @@ public class MainBookController {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            HttpSession session) {
+        Long userId = (Long) session.getAttribute("loginUser");
         Sort sort = direction.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        return mainPageService.getAllBooks(keyword, pageable);
+        return mainPageService.getAllBooks(keyword, pageable, userId);
     }
     @Operation(summary = "찜 랭킹", description = "찜하기 상위 N권 조회")
     @GetMapping("/ranking")
