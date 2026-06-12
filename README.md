@@ -408,7 +408,7 @@ AI 표지 이미지 정보를 저장하는 테이블입니다.
 | `bestBanner` | String | 인기 도서 배너 이미지 URL |
 | `aiRecommendBanner` | String | AI 추천 도서 배너 이미지 URL |
 ---
-## 8 Troubleshooting
+## 8. Troubleshooting
 
 프로젝트 진행 중 발생한 주요 문제와 해결 방안입니다.
 
