@@ -408,7 +408,16 @@ AI 표지 이미지 정보를 저장하는 테이블입니다.
 | `bestBanner` | String | 인기 도서 배너 이미지 URL |
 | `aiRecommendBanner` | String | AI 추천 도서 배너 이미지 URL |
 ---
+## Troubleshooting
 
+프로젝트 진행 중 발생한 주요 문제와 해결 방안입니다.
+
+| 구분 | 현상 | 원인 | 해결 |
+| :--- | :--- | :--- | :--- |
+| **빌드** | Springdoc 버전 업그레이드 미적용 | Gradle 캐시에 구버전 라이브러리 잔존 | PowerShell로 캐시 삭제 후 재빌드 |
+| **인증/세션** | 로그아웃 후에도 관리자 버튼 노출 | 세션 쿠키(JSESSIONID) 캐싱 간섭 | 엄격한 조건문 적용 및 `setMaxAge(0)`으로 쿠키 강제 폐기 |
+| **DB 저장** | `DataTruncation` 에러 발생 | Base64 데이터가 VARCHAR 크기 초과 | `@Lob` 또는 `@Column(columnDefinition = "LONGTEXT")` 사용 |
+---
 ## 팀원
 
 | 이름 | 담당 | 담당 |
