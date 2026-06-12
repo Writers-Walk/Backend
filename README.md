@@ -8,7 +8,8 @@
 ## 1. 프로젝트 개요
 
 AI(OpenAI GPT Image API)를 활용하여 도서 표지 이미지를 자동 생성할 수 있는 도서관리 웹 서비스입니다.  
-사용자는 도서를 등록·조회·삭제하고, AI가 생성한 이미지를 표지로 저장할 수 있습니다.
+사용자는 조회,리뷰,별점,찜하기 할 수 있습니다.
+관리자는 도서를 등록·조회·삭제하고, AI가 생성한 이미지를 표지로 저장할 수 있습니다.
 기존 4차 미니프로젝트의 Mock Server(`json-server`) 환경을 **Spring Boot**로 전환하여 안정적인 데이터 관리와 API 서비스를 제공하는 백엔드 서버입니다. 
 JPA를 이용한 데이터베이스 연동 및 외부 OpenAI API 연동을 통해 고도화된 도서 관리 기능을 구현합니다
 
@@ -92,7 +93,6 @@ bookapp/
                             │   ├── RestTemplateConfig.java        # 외부 API 호출용 RestTemplate 설정
                             │   ├── SwaggerConfig.java             # Swagger/OpenAPI 문서 설정
                             │   ├── WebMvcConfig.java              # CORS 등 Web MVC 설정
-                            │   ├── SecurityConfig.java            # Spring Security 인증/인가 설정
                             │   └── WebConfig.java                 # 추가 Web MVC 공통 설정
                             ├── controller/                        # 클라이언트 요청을 받는 API 계층
                             │   ├── bookcreate/
@@ -142,6 +142,10 @@ bookapp/
                             │   └── WishListEntity.java            # 찜 목록 엔티티
                             ├── exception/                         # 예외 처리
                             │   ├── BookNotFoundException.java     # 도서 미존재 예외
+                            │   ├── DuplicateUserIdException.java  # 회원가입 시 아이디 중복 예외    
+                            │   ├── LoginFailedException.java      # 로그인 실패 예외
+                            │   ├── LoginRequiredException.java    # 로그인이 필요한 요청에 대한 예외
+                            │   ├── UserNotFoundException.java     # 사용자 미존재 예외
                             │   └── GlobalExceptionHandler.java    # 전역 예외 처리 핸들러
                             ├── repository/                        # DB 접근 계층
                             │   ├── BannerImageUrlRepository.java  # 배너 이미지 Repository
@@ -178,7 +182,7 @@ bookapp/
 프로젝트 루트에 `.env` 파일을 생성하고 OpenAI API Key를 입력합니다.
 
 ```env
-VITE_OPENAI_API_KEY=your_openai_api_key_here
+API_KEY=your_openai_api_key
 ```
 
 > **주의:** `.env` 파일은 절대 Git에 커밋하지 마세요.
