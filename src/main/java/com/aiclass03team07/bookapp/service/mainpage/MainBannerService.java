@@ -3,6 +3,7 @@ package com.aiclass03team07.bookapp.service.mainpage;
 
 import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.repository.BookRepository;
+import com.aiclass03team07.bookapp.repository.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MainBannerService {
     private  final BookRepository bookRepository;
+    private final WishlistRepository wishlistRepository;
 
     public BookEntity getLatestBook() {
         // 0페이지에서 1개만 가져오되, createdAt 기준으로 내림차순 정렬
@@ -25,9 +27,10 @@ public class MainBannerService {
     //관리자 계정일때 배너 생성하는
 
 
-    public BookEntity getMostLikedBook() {
-        return bookRepository.findTopByOrderByLikesDesc();
+    public BookEntity getMostWishedBook() {
+        return wishlistRepository.findMostWishedBookId()
+                .flatMap(bookRepository::findById)
+                .orElse(null);
     }
-
 
 }
