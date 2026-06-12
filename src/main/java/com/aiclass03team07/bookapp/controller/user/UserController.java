@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.CacheControl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -132,11 +133,19 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<?> me(HttpSession session) {
         Long Id = (Long) session.getAttribute("loginUser");
-        if (Id == null) {
-            return ResponseEntity.status(401).build();   // 로그인 안 됨
+        if (Id == null) {   // 로그인 안 됨
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.noStore())   // 응답 캐시 금지
+                    .body(Map.of("loggedIn", false));
         }
         String role = (String) session.getAttribute("role");
+        Map<String, Object> body = new HashMap<>();
+        body.put("loggedIn", true);
+        body.put("userId", id);
+        body.put("role", role);
         // userId, role을 DTO로 반환 (프론트가 이걸로 버튼 분기)
-        return ResponseEntity.ok(Map.of("userId", Id, "role", role));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .body(body);
     }
 }
