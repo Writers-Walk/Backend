@@ -169,12 +169,7 @@ bookapp/
 
 ## 4. 실행 방법
 
-### 사전 준비
 
-```bash
-npm install
-npm install react-router-dom
-```
 
 ### 환경 변수 설정
 
@@ -187,7 +182,7 @@ VITE_OPENAI_API_KEY=your_openai_api_key_here
 > **주의:** `.env` 파일은 절대 Git에 커밋하지 마세요.
 
 ### H2 데이터베이스 설정
-
+```
 src/main/resources/application.yaml 기준 기본 설정은 다음과 같습니다.
 spring:
   datasource:
@@ -205,17 +200,6 @@ spring:
 
 > **두 서버를 동시에 실행해야 합니다.**
 
-**터미널 1 — Mock API 서버 (json-server)**
-
-```bash
-npx json-server@0.17.4 db.json --port 3000
-```
-
-**터미널 2 — React 개발 서버**
-
-```bash
-npm run dev
-```
 
 | 서버 | 주소 |
 |---|---|
