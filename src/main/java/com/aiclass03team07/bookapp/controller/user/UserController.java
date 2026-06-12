@@ -110,12 +110,16 @@ public class UserController {
 // 현재 로그인 유저 권한 (프론트에 권한 전달용)
     @GetMapping("/me")
     public ResponseEntity<?> me(HttpSession session) {
-        Long Id = (Long) session.getAttribute("loginUser");
-        if (Id == null) {
-            return ResponseEntity.status(401).build();   // 로그인 안 됨
+        Long id = (Long) session.getAttribute("loginUser");
+        if (id == null) {
+            // 비로그인도 정상 상태 → 200 (브라우저 콘솔 빨간 줄 방지)
+            return ResponseEntity.ok(Map.of("loggedIn", false));
         }
         String role = (String) session.getAttribute("role");
-        // userId, role을 DTO로 반환 (프론트가 이걸로 버튼 분기)
-        return ResponseEntity.ok(Map.of("userId", Id, "role", role));
+        Map<String, Object> body = new HashMap<>();
+        body.put("loggedIn", true);
+        body.put("userId", id);
+        body.put("role", role);
+        return ResponseEntity.ok(body);
     }
 }
