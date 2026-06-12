@@ -157,8 +157,10 @@ public class GenerateImageService {
                 userPrompt == null ? "없음" : userPrompt
         );
     }
-    //private->public교체
+
+
     public String callOpenAiImageApi(String prompt, String model, String size, String quality){
+
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);

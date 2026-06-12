@@ -39,7 +39,7 @@ public class GenerateImageController {
         response.put("author", book.getAuthor());
         response.put("genre", book.getGenre());
         response.put("content", book.getContent());
-        response.put("coverImageUrl", imageDto != null ? imageDto.getCoverImageUrl() : "");
+        response.put("coverImageUrl", imageDto != null ? imageDto.getCoverImageUrl() : null);
 
         return response;
     }

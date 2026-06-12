@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.aiclass03team07.bookapp.exception.DuplicateUserIdException;
+import com.aiclass03team07.bookapp.exception.LoginFailedException;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class UserService {
     @Transactional
     public void join(UserJoinRequestDto dto){
         if(checkUserIdDuplicate(dto.getUserId())){
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+            throw new DuplicateUserIdException(dto.getUserId());
         }
         UserEntity user = new UserEntity();
         user.setUserId(dto.getUserId());
@@ -49,10 +51,10 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserEntity login(String userId, String password){
-        UserEntity user = userRepository.findByUserId(userId).orElseThrow(()-> new RuntimeException("아이디 또는 비밀번호가 틀렸습니다."));
+        UserEntity user = userRepository.findByUserId(userId).orElseThrow(LoginFailedException::new);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("아이디 또는 비밀번호가 틀렸습니다.");
+            throw new LoginFailedException();
         }
         return user;
     }
