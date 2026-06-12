@@ -4,7 +4,9 @@ import com.aiclass03team07.bookapp.dto.user.UserJoinRequestDto;
 import com.aiclass03team07.bookapp.dto.user.UserLoginRequestDto;
 import com.aiclass03team07.bookapp.entity.UserEntity;
 import com.aiclass03team07.bookapp.service.user.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -95,15 +97,35 @@ public class UserController {
     }
 
     //로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request){
-        HttpSession session = request.getSession(false);
-
-        if(session != null){
-            session.invalidate();
-        }
-        return ResponseEntity.ok().build();
+//    @PostMapping("/logout")
+//    public ResponseEntity<Void> logout(HttpServletRequest request){
+////        Map<String, String> result = new HashMap<>();   //admincheck test
+//
+//        HttpSession session = request.getSession(false);
+//        if(session != null){
+//            session.invalidate();
+//        }
+//
+//        Cookie cookie = new Cookie("JSESSIONID", null);
+//        cookie.setPath("/");    //admincheck test
+//        cookie.setMaxAge(0);    //admincheck test
+////        result.addCookie(cookie);
+//        return ResponseEntity.ok().build();
+//    }
+@PostMapping("/logout")
+public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+        session.invalidate(); // 서버 세션 폭파
     }
+
+    Cookie cookie = new Cookie("JSESSIONID", null);
+    cookie.setPath("/");
+    cookie.setMaxAge(0);
+    response.addCookie(cookie);
+
+    return ResponseEntity.ok().build();
+}
 
     //상태유지
 // 현재 로그인 유저 권한 (프론트에 권한 전달용)
