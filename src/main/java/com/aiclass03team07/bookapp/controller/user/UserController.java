@@ -3,7 +3,6 @@ package com.aiclass03team07.bookapp.controller.user;
 import com.aiclass03team07.bookapp.dto.user.UserJoinRequestDto;
 import com.aiclass03team07.bookapp.dto.user.UserLoginRequestDto;
 import com.aiclass03team07.bookapp.entity.UserEntity;
-import com.aiclass03team07.bookapp.exception.LoginFailedException;
 import com.aiclass03team07.bookapp.service.user.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,7 +84,7 @@ public class UserController {
 
             return ResponseEntity.ok(response);
         }
-        catch (LoginFailedException e){
+        catch (IllegalArgumentException e){
             response.put("status", "fail");
             response.put("message", e.getMessage());
             return ResponseEntity.status(400).body(response);
@@ -110,38 +109,34 @@ public class UserController {
 //        Cookie cookie = new Cookie("JSESSIONID", null);
 //        cookie.setPath("/");    //admincheck test
 //        cookie.setMaxAge(0);    //admincheck test
-////        result.addCookie(cookie);
+    ////        result.addCookie(cookie);
 //        return ResponseEntity.ok().build();
 //    }
-@PostMapping("/logout")
-public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
-    HttpSession session = request.getSession(false);
-    if (session != null) {
-        session.invalidate(); // 서버 세션 폭파
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // 서버 세션 폭파
+        }
+
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
     }
-
-    Cookie cookie = new Cookie("JSESSIONID", null);
-    cookie.setPath("/");
-    cookie.setMaxAge(0);
-    response.addCookie(cookie);
-
-    return ResponseEntity.ok().build();
-}
 
     //상태유지
 // 현재 로그인 유저 권한 (프론트에 권한 전달용)
     @GetMapping("/me")
     public ResponseEntity<?> me(HttpSession session) {
-        Long id = (Long) session.getAttribute("loginUser");
-        if (id == null) {
-            // 비로그인도 정상 상태 → 200 (브라우저 콘솔 빨간 줄 방지)
-            return ResponseEntity.ok(Map.of("loggedIn", false));
+        Long Id = (Long) session.getAttribute("loginUser");
+        if (Id == null) {
+            return ResponseEntity.status(401).build();   // 로그인 안 됨
         }
         String role = (String) session.getAttribute("role");
-        Map<String, Object> body = new HashMap<>();
-        body.put("loggedIn", true);
-        body.put("userId", id);
-        body.put("role", role);
-        return ResponseEntity.ok(body);
+        // userId, role을 DTO로 반환 (프론트가 이걸로 버튼 분기)
+        return ResponseEntity.ok(Map.of("userId", Id, "role", role));
     }
 }
