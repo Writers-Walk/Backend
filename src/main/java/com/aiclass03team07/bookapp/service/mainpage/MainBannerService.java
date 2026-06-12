@@ -8,10 +8,12 @@ import com.aiclass03team07.bookapp.entity.BookEntity;
 import com.aiclass03team07.bookapp.entity.WishListEntity;
 import com.aiclass03team07.bookapp.repository.BannerImageUrlRepository;
 import com.aiclass03team07.bookapp.repository.BookRepository;
+
 import com.aiclass03team07.bookapp.repository.GenerateImageRepository;
 import com.aiclass03team07.bookapp.repository.WishlistRepository;
 import com.aiclass03team07.bookapp.service.generateimage.GenerateImageService;
 import jakarta.persistence.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -35,13 +37,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MainBannerService {
+
     private final BookRepository bookRepository;
     private final BannerImageUrlRepository bannerImageUrlRepository;
     private final GenerateImageService generateImageService;
     private final WishlistRepository wishlistRepository;
     private final GenerateImageRepository generateImageRepository;
     private final RestTemplate restTemplate;
-
     private static final String DEFAULT_MODEL = "gpt-image-2";
     private static final String DEFAULT_SIZE = "3840x1536";
     private static final String DEFAULT_QUALITY = "medium";

@@ -158,6 +158,7 @@ public class GenerateImageService {
         );
     }
 
+
     public String callOpenAiImageApi(String prompt, String model, String size, String quality){
 
         HttpHeaders headers = new HttpHeaders();
