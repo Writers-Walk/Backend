@@ -11,7 +11,7 @@ public class CreateBannerDTO {
     private String userPrompt;      // 추가 입력 프롬프트
 
     @NotBlank(message = "이미지 모델 선택은 필수입니다.")    //예외처리
-    private String imageModel;    // 화면에서 고른 모델명 (예: dall-e-3)
+    private String imageModel;    // 화면에서 고른 모델명 (예: gpt-2)
 
     @NotBlank(message = "해상도 선택은 필수입니다.")   //예외처리
     private String resolution;    // 화면에서 고른 해상도 (예: 1024x1024)

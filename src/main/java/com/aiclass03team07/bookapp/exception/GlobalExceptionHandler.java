@@ -6,12 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.RestClientException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-//@RestControllerAdvice 이거 문제있음...
+@RestControllerAdvice(basePackages = "com.aiclass03team07.bookapp.controller")
 public class GlobalExceptionHandler {
 
     // 404 - 도서 없음 (커스텀 예외)
@@ -24,18 +25,18 @@ public class GlobalExceptionHandler {
     }
 
     // 404 - JPA EntityNotFoundException (예: MainBannerService "Banner not found")
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleEntityNotFound(EntityNotFoundException e) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Not Found");
-        errorResponse.put("message", e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
+        @ExceptionHandler(EntityNotFoundException.class)
+        public ResponseEntity<Map<String, String>> handleEntityNotFound(EntityNotFoundException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Not Found");
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
 
-    // 409 - 아이디 중복 (커스텀 예외)
-    @ExceptionHandler(DuplicateUserIdException.class)
-    public ResponseEntity<Map<String, String>> handleDuplicateUserId(DuplicateUserIdException e) {
-        Map<String, String> errorResponse = new HashMap<>();
+        // 409 - 아이디 중복 (커스텀 예외)
+        @ExceptionHandler(DuplicateUserIdException.class)
+        public ResponseEntity<Map<String, String>> handleDuplicateUserId(DuplicateUserIdException e) {
+            Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", "Conflict");
         errorResponse.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);

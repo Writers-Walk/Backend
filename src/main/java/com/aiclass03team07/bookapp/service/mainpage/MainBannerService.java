@@ -13,11 +13,21 @@ import com.aiclass03team07.bookapp.repository.WishlistRepository;
 import com.aiclass03team07.bookapp.service.generateimage.GenerateImageService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,10 +40,14 @@ public class MainBannerService {
     private final GenerateImageService generateImageService;
     private final WishlistRepository wishlistRepository;
     private final GenerateImageRepository generateImageRepository;
+    private final RestTemplate restTemplate;
 
     private static final String DEFAULT_MODEL = "gpt-image-2";
     private static final String DEFAULT_SIZE = "3840x1536";
     private static final String DEFAULT_QUALITY = "medium";
+
+    @Value("${api.key}")
+    private String apiKey;
 
     //2
     //배너 이미지 3개 가져오는
@@ -85,10 +99,13 @@ public class MainBannerService {
         String quality = resolve(dto.getQuality(), DEFAULT_QUALITY);
 
         // 프롬프트 생성
-        String prompt = createPrompt(bookentity, coverImageUrl, dto.getType(), dto.getUserPrompt());
+        String prompt = createPrompt(bookentity, dto.getType(), dto.getUserPrompt());
+
+        //img 변환
+        byte[] coverImageBytes = decodeBase64Image(coverImageUrl);
 
         // 외부 API 호출
-        String base64Image = generateImageService.callOpenAiImageApi(prompt, model, size, quality);
+        String base64Image = callOpenAiImageEditApi(prompt, coverImageBytes,model, size, quality);
 
         // 저장
         return "data:image/png;base64," + base64Image;
@@ -98,13 +115,12 @@ public class MainBannerService {
         return (value != null && !value.isBlank()) ? value : defaultValue;
     }
 
-    private String createPrompt(BookEntity book, String cover_img,String type,String userPrompt){
+    private String createPrompt(BookEntity book ,String type,String userPrompt){
         return """
                 책 제목: %s
                 저자: %s
                 장르: %s
                 책 내용: %s
-                책 표지: %s
                 광고 문구: %s
                 
                 다음 항목들을 따라서 이미지를 생성하세요.
@@ -122,10 +138,52 @@ public class MainBannerService {
                 book.getAuthor(),
                 book.getGenre(),
                 book.getContent(),
-                cover_img,
+                //cover_img,
                 type,
                 userPrompt == null ? "없음" : userPrompt
         );
+    }
+
+    private String callOpenAiImageEditApi(String prompt, byte[] imageBytes, String model, String size, String quality) {
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("model", model);
+        body.add("prompt", prompt);
+        body.add("size", size);
+        body.add("quality", quality);
+
+        ByteArrayResource imageResource = new ByteArrayResource(imageBytes) {
+            @Override
+            public String getFilename() {
+                return "cover.png";
+            }
+        };
+        body.add("image", imageResource);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setBearerAuth(apiKey);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<Map> response = restTemplate.postForEntity(
+                "https://api.openai.com/v1/images/edits",
+                requestEntity,
+                Map.class
+        );
+
+        List<Map<String, String>> data = (List<Map<String, String>>) response.getBody().get("data");
+        return data.get(0).get("b64_json");
+    }
+
+    private byte[] decodeBase64Image(String dataUrl) {
+        // 1. "data:image/png;base64," 접두사 제거
+        String base64 = dataUrl.contains(",")
+                ? dataUrl.substring(dataUrl.indexOf(",") + 1)
+                : dataUrl;
+
+        // 2. 순수 base64 문자열을 실제 byte[] (이미지 바이너리)로 디코딩
+        return Base64.getDecoder().decode(base64);
     }
 
     //latestBanner 이거나 bestBanner에 맞는 book entity 찾기

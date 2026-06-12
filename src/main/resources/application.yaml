@@ -39,6 +39,11 @@ logging:
 
 #swagger
 springdoc:
+  api-docs:
+    enabled: true
+  override-with-genric-response: false
   swagger-ui:
     path: /swagger
+    enabled: true
+
 
